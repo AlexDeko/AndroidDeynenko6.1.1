@@ -1,5 +1,6 @@
 package com.homework1_3.androiddeynenko611;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,14 +13,23 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_LIFE_ACTIVITY = "LifeCycle";
+    private static final String keyOutState = "key_outState";
     TextView textView;
+    String text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView textView = findViewById(R.id.textExample);
-        Log.d(LOG_LIFE_ACTIVITY, "onCreate");
-        textView.append("\n" + "onCreate");
+        textView = findViewById(R.id.textExample);
+        String infoOutputBundle;
+        if(savedInstanceState == null){
+            infoOutputBundle = " null";
+            textView.setText(text);
+        } else {
+            infoOutputBundle = " не null";
+        }
+        Log.d(LOG_LIFE_ACTIVITY, "onCreate" + infoOutputBundle);
+        textView.append("\n" + "onCreate" + infoOutputBundle);
     }
 
     @Override
@@ -90,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_LIFE_ACTIVITY, "onKeyDown");
         textView.append("\n" + "onKeyDown");
         return super.onKeyDown(keyCode, event);
+    //    return true;
     }
 
     @Override
@@ -97,5 +108,22 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_LIFE_ACTIVITY, "onKeyLongPress");
         textView.append("\n" + "onKeyLongPress");
         return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(LOG_LIFE_ACTIVITY, "onSaveInstanceState");
+        textView.append("\n" + "onSaveInstanceState");
+        outState.putString(keyOutState,textView.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(LOG_LIFE_ACTIVITY, "onRestoreInstanceState");
+        textView.append("\n" + "onRestoreInstanceState");
+        text = savedInstanceState.getString(keyOutState);
+
     }
 }
